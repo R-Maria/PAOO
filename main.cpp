@@ -3,8 +3,8 @@
 
 class Persoana {
 private:
-    int varsta = 0;
-    std::string nume = "";
+    int varsta;
+    std::string nume;
 public:
     Persoana() {};
     Persoana(std::string nume, int varsta) {
@@ -21,6 +21,27 @@ public:
     std::string getNume() {
         return nume;
     };
+    Persoana(const Persoana&) {
+        std::cout<<"Copy Constructor clasa Persoana"<<std::endl;
+    }
+    //10
+    Persoana& operator+=(const Persoana& p) {
+        std::cout<<"Operator += clasa Persoana"<<std::endl;
+        nume += p.nume;
+        varsta += p.varsta;
+        return *this;
+    }
+    //11
+    Persoana& operator = (const Persoana& p) {
+        if(this == &p) {
+            std::cout<<"Acelasi obiect"<<std::endl;
+            return *this;
+        }
+        std::cout<<"Copy Assignment clasa Persoana"<<std::endl;
+        nume = p.nume;
+        varsta = p.varsta;
+        return *this;
+    }
 };
 
 class Student :public Persoana {
@@ -38,11 +59,20 @@ public:
     std::string getFacultate() {
         return facultate;
     };
-    Student(const Student& s) {
+    //12
+    Student(const Student& s): Persoana(s) {
         std::cout << "Copy Constructor Student" << std::endl;
+        this->facultate = s.facultate;
     }; // copy constructor
     Student& operator=(const Student& s) {
-        std::cout << "copy assignment operator Student" << std::endl;
+        if(this == &s) {
+            std::cout<<"Acelasi obiect"<<std::endl;
+            return *this;
+        }
+        std::cout << "Copy assignment operator Student" << std::endl;
+        Persoana::operator=(s);
+        this->facultate = s.facultate;
+        return *this;
     } //copy assignment operator
 };
 
@@ -80,7 +110,25 @@ int main() {
     c.adaugaStudenti(&a);
 
     //Camin c1(c); //copy constructor
-    //Camin c2 = c; //copy assignment operator
+    //Camin c2;
+    //c2 = c; //copy assignment operator
+
+    //tema2
+    Persoana p1("p1",5);
+    Persoana p2("p2",6);
+    Persoana p3("p3",7);
+    //10
+    p1 += p2 += p3;
+    std::cout<<p1.getVarsta()<<std::endl;
+    std::cout<<p1.getNume()<<std::endl;
+    //11
+    p2 = p2;
+    //12
+    Student s;
+    s = m;
+    std::cout<<s.getFacultate()<<std::endl;
+    std::cout<<s.getNume()<<std::endl;
+    std::cout<<s.getVarsta()<<std::endl;
 
     return 0;
 }
